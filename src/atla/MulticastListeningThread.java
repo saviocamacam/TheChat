@@ -35,8 +35,9 @@ public class MulticastListeningThread extends Thread {
 				
 				String message = new String(messageIn.getData(), messageIn.getOffset(), messageIn.getLength());
 				
-				if (message.matches(".*\\|\\|\\|join.*")) {
-					Pattern pattern = Pattern.compile("([a-z1-9]*)");
+				
+				if (message.matches("JOIN \\[[a-zA-Z1-9]+\\][ \t\n]*")) {
+					Pattern pattern = Pattern.compile("JOIN \\[([a-zA-Z1-9]+)\\][ \t\n]*");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -47,22 +48,22 @@ public class MulticastListeningThread extends Thread {
 						System.out.println(apelide + " entrou!");
 						chatManager.getPeers().add(peer);
 					}
-					
-					chatManager.sendControlMessage(chatManager.getApelido() + "|||joinACK", 1);
+					chatManager.setPrivateAdress(peer.getIp());
+					chatManager.sendFormatedMessage(null, 1, 2);
 				}
 				
-				else if(message.matches(".*\\|\\|\\|leave")) {
-					Pattern pattern = Pattern.compile("([a-z1-9]*)");
+				else if(message.matches("LEAVE \\[([a-zA-Z1-9]+)\\][ \t\n]*")) {
+					Pattern pattern = Pattern.compile("LEAVE \\[([a-zA-Z1-9]+)\\][ \t\n]*");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
 					String apelide = matcher.group(1);
 					System.out.println(apelide + " saiu!");
-					Peer peer = new Peer(messageIn.getAddress(), matcher.group(1));
+					Peer peer = new Peer(messageIn.getAddress(), apelide);
 					chatManager.getPeers().remove(peer);
 				}
 				
-				else if(message.matches(".*\\|\\|\\|.*")) {
+				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] (.)*|([\n\t])*")) {
 					Pattern pattern = Pattern.compile("([a-z1-9]*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
