@@ -75,6 +75,47 @@ public class UDPListeningThread extends Thread {
 					this.chatManager.setPrivatePort(request.getPort());
 					this.chatManager.sendFormatedMessage(1, 6);
 				}
+				else if(message.matches("FILES \\[(.+)\\]")) {
+					String nameFiles = this.chatManager.extractLocaleInformation("FILES \\[(.+)\\]", message, 1);
+					String[] nameFilesArray = nameFiles.split("(, )");
+					int i;
+					for(i = 0 ; i < nameFilesArray.length ; i++) {
+						System.out.println("Arquivo " + i + ": " + nameFilesArray[i]);
+					}
+				}
+				else if(message.matches("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))")) {
+					String apelide = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 1);
+					String nameFile = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 2);
+					
+					this.chatManager.setPrivateAddress(request.getAddress());
+					this.chatManager.setPrivatePort(request.getPort());
+					
+					if(chatManager.hasFile(nameFile)) {
+						this.chatManager.getTcpThread().start();
+						this.chatManager.uploadFile(nameFile);
+						
+						this.chatManager.sendFormatedMessage(1, 8);
+						System.out.println("Enviando " + nameFile + " para " + apelide);
+						
+						this.chatManager.setMessageString("Upload do arquivo em andamento.");
+						this.chatManager.sendFormatedMessage(1, 4);
+					}
+					else {
+						System.out.println(apelide + " solicitou o download de um arquivo nao encontrado.");
+						this.chatManager.setMessageString("Arquivo solicitado nao foi encontrado.");
+						this.chatManager.sendFormatedMessage(1, 4);
+					}
+				}
+				else if(message.matches("DOWNINFO \\[((.+)[.]([a-z1-9]+)), ([1-9]+), (.*), ([1-9]+)\\]")) {
+					String nameFile = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 1);
+					String fileSize = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 2);
+					int fileSizeInt = Integer.valueOf(fileSize);
+					String peerAddress = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 3);
+					String peerPort = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 4);
+					int peerPortInt = Integer.valueOf(peerPort);
+					
+					chatManager.downloadFile(nameFile, fileSizeInt, peerAddress, peerPortInt);
+				}
 				else{
 					System.out.println(message);
 					System.out.println("PRIV: Mensagem recebida em formato inapropriado. Erro de protocolo");

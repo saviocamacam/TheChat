@@ -14,7 +14,7 @@ public class Main {
 		//String apelide = "savio";
 		System.out.println(apelide);
 		
-		ChatManager chatManager = new ChatManager(apelide, 5555, 5566);
+		ChatManager chatManager = new ChatManager(apelide, 5555, 5566, 7777);
 		chatManager.initialize();
 		
 		do {
@@ -40,6 +40,7 @@ public class Main {
 					
 				case 2:
 					if(chatManager.getStatusMulticast()) {
+						System.out.println("Mensagem em grupo:");
 						chatManager.requestMessage();
 						chatManager.sendFormatedMessage(0, 3);
 					}
@@ -55,6 +56,7 @@ public class Main {
 						int option = scanner.nextInt();
 						
 						if(option >= 0 && option < chatManager.getPeers().size()) {
+							System.out.println("Mensagem individual:");
 							chatManager.requestMessage();
 							chatManager.sendMessageFor(option);
 						}
@@ -81,7 +83,22 @@ public class Main {
 					break;
 					
 				case 5:
-					chatManager.sendFormatedMessage(1, 7);
+					if(chatManager.getPeers().size() == 0) {
+						System.out.println("Lista de enderecos esta vazia");
+					}
+					else{
+						chatManager.printNameOfPeers();
+						int option = scanner.nextInt();
+						
+						if(option >= 0 && option < chatManager.getPeers().size()) {
+							System.out.println("Nome do arquivo:");
+							chatManager.requestMessage();
+							chatManager.loadPeerOption(option);
+							chatManager.sendFormatedMessage(1, 7);
+						}
+						else
+							System.out.println("Erro de indice");
+					}
 					break;
 					
 				case 6:

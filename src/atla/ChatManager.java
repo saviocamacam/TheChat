@@ -1,13 +1,14 @@
 package atla;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,8 +16,10 @@ import java.util.regex.Pattern;
 public class ChatManager {
 	private DatagramSocket udpSocket = null;
 	private MulticastSocket multicastSocket = null;
+	private ServerSocket serverSocket = null;
 	private UDPListeningThread udpThread = null;
 	private MulticastListeningThread multicastThread = null;
+	private TCPListenningThread tcpThread = null;
 	private LinkedList<Peer> peers = null;
 	private String apelide;
 	private int privatePort;
@@ -34,15 +37,16 @@ public class ChatManager {
 	
 	private String filename = null;
 	private String filesize;
-	private List<String> listOfNameFiles;
 	private DownloadManager downloadManager;
+	private int tcpPort;
 	
 	
-	public ChatManager(String apelido, int privatePort, int multicastPort) {
+	public ChatManager(String apelido, int privatePort, int multicastPort, int tcpPort) {
 		setPeers(new LinkedList<>());
 		this.apelide = apelido;
 		this.privatePort = privatePort;
 		this.multicastPort = multicastPort;
+		this.tcpPort = tcpPort;
 		this.downloadManager = new DownloadManager();
 		this.scanner = new Scanner(System.in);
 		
@@ -50,6 +54,7 @@ public class ChatManager {
 			this.multicastAddress = InetAddress.getByName("225.1.2.3");
 			udpSocket = new DatagramSocket(privatePort);
 			multicastSocket = new MulticastSocket(multicastPort);
+			serverSocket = new ServerSocket(tcpPort);
 			
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -80,6 +85,13 @@ public class ChatManager {
 		
 		multicastThread = new MulticastListeningThread(multicastSocket, this, multicastAddress);
 		multicastThread.start();
+		
+		tcpThread = new TCPListenningThread(serverSocket, this);
+		
+	}
+
+	public TCPListenningThread getTcpThread() {
+		return tcpThread;
 	}
 
 	public String getApelido() {
@@ -144,15 +156,18 @@ public class ChatManager {
 			case 6: 
 				formatedMessage = "FILES [";
 				int i;
-				for(i = 0; i < listOfNameFiles.size()-1 ; i++) {
-					formatedMessage.concat(downloadManager.getListOfNameFilesUpload().get(i) + ", ");
+				downloadManager.loadFilesUpload();
+				for(i = 0; i < downloadManager.getListOfNameFilesUpload().size()-1 ; i++) {
+					formatedMessage = formatedMessage.concat(downloadManager.getListOfNameFilesUpload().get(i) + ", ");
 				}
-				formatedMessage.concat(listOfNameFiles.get(i));
-				formatedMessage.concat("]");
+				formatedMessage = formatedMessage.concat(downloadManager.getListOfNameFilesUpload().get(i));
+				formatedMessage = formatedMessage.concat("]");
 				break;
-			case 7: formatedMessage = "DOWNFILE [" + apelide + "] " + filename;
+			case 7: 
+				filename = messageString;
+				formatedMessage = "DOWNFILE [" + apelide + "] " + filename;
 				break;
-			case 8: formatedMessage = "DOWNINFO [" + filename + ", " + filesize + ", " + privateAddress + ", " + privatePort + "]";
+			case 8: formatedMessage = "DOWNINFO [" + filename + ", " + filesize + ", " + privateAddress + ", " + tcpPort + "]";
 				break;
 			case 9: formatedMessage = "LEAVE [" + apelide + "]";
 				break;
@@ -179,7 +194,6 @@ public class ChatManager {
 	}
 	
 	public void requestMessage() {
-		System.out.println("MSG: ");
 		messageString = scanner.nextLine();
 	}
 	
@@ -213,7 +227,6 @@ public class ChatManager {
 		Peer privatePeer = peers.get(option);
 		this.privateAddress = privatePeer.getIp();
 		this.apelideDestination = privatePeer.getApelido();
-		//this.downloadManager.loadFilesUpload();
 	}
 
 	public void setPrivatePort(int privatePort) {
@@ -222,6 +235,24 @@ public class ChatManager {
 
 	public void setPrivateAddress(InetAddress privateAddress) {
 		this.privateAddress = privateAddress;
+	}
+
+	public void uploadFile(String nameFile) {
+		File file = downloadManager.getFileByName(nameFile);
+		if(file != null) System.out.println("Subindo arquivo " + file.getName());
+		
+	}
+
+	public boolean hasFile(String nameFile) {
+		return downloadManager.hasFile(nameFile);
+	}
+
+	public void setMessageString(String string) {
+		this.messageString = string;
+	}
+
+	public void downloadFile(String nameFile, int fileSizeInt, String peerAddress, int peerPortInt) {
+		
 	}
 
 }

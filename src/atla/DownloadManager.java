@@ -2,6 +2,7 @@ package atla;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DownloadManager {
@@ -21,12 +22,15 @@ public class DownloadManager {
 	public DownloadManager() {
 		this.folderDownload = new File(rootPath + subPathDownload);
 		this.folderUpload = new File(rootPath + subPathUpload);
+		this.listOfFilesUpload = folderUpload.listFiles();
+		this.listOfNameFilesUpload = new ArrayList<>();
+		loadFilesUpload();
 	}
 	
 	public void loadFilesUpload() {
-		
 		for(File file : listOfFilesUpload) {
 			if (file.isFile()) {
+				//System.out.println(file.getName());
 				listOfNameFilesUpload.add(file.getName());
 			}
 		}
@@ -38,5 +42,19 @@ public class DownloadManager {
 
 	public List<String> getListOfNameFilesUpload() {
 		return listOfNameFilesUpload;
+	}
+	
+	public boolean hasFile(String nameFile) {
+		for(String file : listOfNameFilesUpload) {
+			if(file.equals(nameFile)) return true;
+		}
+		return false;
+	}
+
+	public File getFileByName(String nameFile) {
+		for(File file : listOfFilesUpload) {
+			if(file.isFile() && file.getName().equals(nameFile)) return file;
+		}
+		return null;
 	}
 }
