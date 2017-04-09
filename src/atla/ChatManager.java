@@ -271,7 +271,7 @@ public class ChatManager {
 			Socket socket = new Socket(InetAddress.getByName(peerAddress), peerPortInt);
 			byte[] contents = new byte[fileSizeInt];
 			
-			FileOutputStream fos = new FileOutputStream("c:\\Users\\savio\\Desktop" + nameFile);
+			FileOutputStream fos = new FileOutputStream(downloadManager.getFolderDownload() + "/"  + nameFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			InputStream is = socket.getInputStream();
 			
@@ -280,7 +280,9 @@ public class ChatManager {
             bos.write(contents, 0, bytesRead); 
 		        
 	        bos.flush(); 
-	        socket.close(); 
+	        socket.close();
+	        is.close();
+	        fos.close();
 		        
 	        System.out.println("File saved successfully!");
 	        

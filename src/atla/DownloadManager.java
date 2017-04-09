@@ -28,6 +28,10 @@ public class DownloadManager {
 		loadFilesUpload();
 	}
 	
+	public File getFolderDownload() {
+		return folderDownload;
+	}
+
 	public void loadFilesUpload() {
 		for(File file : listOfFilesUpload) {
 			if (file.isFile()) {
