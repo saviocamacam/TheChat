@@ -36,8 +36,8 @@ public class MulticastListeningThread extends Thread {
 				String message = new String(messageIn.getData(), messageIn.getOffset(), messageIn.getLength());
 				
 				
-				if (message.matches("JOIN \\[[a-zA-Z1-9]+\\][ \t\n]*")) {
-					Pattern pattern = Pattern.compile("JOIN \\[([a-zA-Z1-9]+)\\][ \t\n]*");
+				if (message.matches("JOIN \\[[a-zA-Z1-9]+\\]")) {
+					Pattern pattern = Pattern.compile("JOIN \\[([a-zA-Z1-9]+)\\]");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -49,11 +49,11 @@ public class MulticastListeningThread extends Thread {
 						chatManager.getPeers().add(peer);
 					}
 					chatManager.setPrivateAdress(peer.getIp());
-					chatManager.sendFormatedMessage(null, 1, 2);
+					chatManager.sendFormatedMessage(1, 2);
 				}
 				
-				else if(message.matches("LEAVE \\[([a-zA-Z1-9]+)\\][ \t\n]*")) {
-					Pattern pattern = Pattern.compile("LEAVE \\[([a-zA-Z1-9]+)\\][ \t\n]*");
+				else if(message.matches("LEAVE \\[([a-zA-Z1-9]+)\\]")) {
+					Pattern pattern = Pattern.compile("LEAVE \\[([a-zA-Z1-9]+)\\]");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -63,8 +63,8 @@ public class MulticastListeningThread extends Thread {
 					chatManager.getPeers().remove(peer);
 				}
 				
-				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)")) {
-					Pattern pattern = Pattern.compile("MSG \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)");
+				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] (.*)")) {
+					Pattern pattern = Pattern.compile("MSG \\[([a-zA-Z1-9]+)\\] (.*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					

@@ -35,12 +35,13 @@ public class Main {
 						chatManager.startMulticastSocket();
 					
 					chatManager.setStatusChat(true);
-					chatManager.sendFormatedMessage(null, 0, 1);
+					chatManager.sendFormatedMessage(0, 1);
 					break;
 					
 				case 2:
 					if(chatManager.getStatusMulticast()) {
-						chatManager.sendFormatedMessage(null, 0, 3);
+						chatManager.requestMessage();
+						chatManager.sendFormatedMessage(0, 3);
 					}
 					else System.out.println("Voce não esta no chat");
 					break;
@@ -52,25 +53,27 @@ public class Main {
 					else{
 						chatManager.printNameOfPeers();
 						int option = scanner.nextInt();
-						chatManager.requestMessage();
-						if(option >= 0 && option < chatManager.getPeers().size())
+						
+						if(option >= 0 && option < chatManager.getPeers().size()) {
+							chatManager.requestMessage();
 							chatManager.sendMessageFor(option);
+						}
 						else
 							System.out.println("Erro de indice");
 					}
 					break;
 					
 				case 4:
-					chatManager.sendFormatedMessage(null, 1, 5);
+					chatManager.sendFormatedMessage(1, 5);
 					break;
 					
 				case 5:
-					chatManager.sendFormatedMessage(null, 1, 7);
+					chatManager.sendFormatedMessage(1, 7);
 					break;
 					
 				case 6:
 					chatManager.setStatusChat(false);
-					chatManager.sendFormatedMessage("", 0, 9);
+					chatManager.sendFormatedMessage(0, 9);
 					break;
 					
 				default:

@@ -42,8 +42,8 @@ public class UDPListeningThread extends Thread {
 					}
 				}
 				
-				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)")) {
-					Pattern pattern = Pattern.compile("MSG \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)");
+				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] (.*)")) {
+					Pattern pattern = Pattern.compile("MSG \\[([a-zA-Z1-9]+)\\] (.*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -53,12 +53,12 @@ public class UDPListeningThread extends Thread {
 					System.out.println(apelide + " diz: " + message2);
 				}
 				
-				else if(message.matches("MSGIDV \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)")) {
-					Pattern pattern = Pattern.compile("MSGIDV \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)");
+				else if(message.matches("MSGIDV FROM \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] (.*)")) {
+					Pattern pattern = Pattern.compile("MSGIDV FROM \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] (.*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
-					String apelide = matcher.group(2);
+					String apelide = matcher.group(1);
 					String message2 = matcher.group(3);
 					
 					System.out.println(apelide + " diz: " + message2);

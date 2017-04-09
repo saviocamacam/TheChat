@@ -124,7 +124,7 @@ public class ChatManager {
 		}
 	}
 	
-	public void sendFormatedMessage(String message, int destinationMode, int typeMessage) {
+	public void sendFormatedMessage(int destinationMode, int typeMessage) {
 		
 		String formatedMessage = "";
 		
@@ -133,9 +133,9 @@ public class ChatManager {
 				break;
 			case 2: formatedMessage = "JOINACK [" + apelide + "]";
 				break;
-			case 3: formatedMessage = "MSG [" + apelide + "]" + message;
+			case 3: formatedMessage = "MSG [" + apelide + "] " + messageString;
 				break;
-			case 4: formatedMessage = "MSGIDV FROM [" + apelide + "] TO [" + apelideDestination + "]" + message;
+			case 4: formatedMessage = "MSGIDV FROM [" + apelide + "] TO [" + apelideDestination + "] " + messageString;
 				break;	
 			case 5: formatedMessage = "LISTFILES [" + apelide + "]";
 				break;
@@ -148,7 +148,7 @@ public class ChatManager {
 				formatedMessage.concat(listOfNameFiles.get(i));
 				formatedMessage.concat("]");
 				break;
-			case 7: formatedMessage = "DOWNFILE [" + apelide + "]" + filename;
+			case 7: formatedMessage = "DOWNFILE [" + apelide + "] " + filename;
 				break;
 			case 8: formatedMessage = "DOWNINFO [" + filename + ", " + filesize + ", " + privateAddress + ", " + privatePort + "]";
 				break;
@@ -186,7 +186,7 @@ public class ChatManager {
 	public void sendMessageFor(int option) {
 		Peer privatePeer = peers.get(option);
 		this.privateAddress = privatePeer.getIp();
-		sendFormatedMessage(null, 1, 4);
+		sendFormatedMessage(1, 4);
 	}
 
 	public void sendGroupMessage() {
