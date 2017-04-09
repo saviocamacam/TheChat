@@ -22,6 +22,7 @@ public class DownloadManager {
 	public DownloadManager() {
 		this.folderDownload = new File(rootPath + subPathDownload);
 		this.folderUpload = new File(rootPath + subPathUpload);
+		System.out.println("Aqui " + rootPath + subPathUpload);
 		this.listOfFilesUpload = folderUpload.listFiles();
 		this.listOfNameFilesUpload = new ArrayList<>();
 		loadFilesUpload();
