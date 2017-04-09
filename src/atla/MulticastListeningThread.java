@@ -36,8 +36,8 @@ public class MulticastListeningThread extends Thread {
 				String message = new String(messageIn.getData(), messageIn.getOffset(), messageIn.getLength());
 				
 				
-				if (message.matches("JOIN \\[[a-zA-Z1-9]+\\]")) {
-					Pattern pattern = Pattern.compile("JOIN \\[([a-zA-Z1-9]+)\\]");
+				if (message.matches("JOIN \\[[a-zA-Z0-9]+\\]")) {
+					Pattern pattern = Pattern.compile("JOIN \\[([a-zA-Z0-9]+)\\]");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -53,7 +53,7 @@ public class MulticastListeningThread extends Thread {
 				}
 				
 				else if(message.matches("LEAVE \\[(.+)\\]")) {
-					Pattern pattern = Pattern.compile("LEAVE \\[([a-zA-Z1-9]+)\\]");
+					Pattern pattern = Pattern.compile("LEAVE \\[([a-zA-Z0-9]+)\\]");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					

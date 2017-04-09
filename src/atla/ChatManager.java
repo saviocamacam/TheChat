@@ -1,13 +1,18 @@
 package atla;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -36,9 +41,9 @@ public class ChatManager {
 	private String apelideDestination = null;
 	
 	private String filename = null;
-	private String filesize;
 	private DownloadManager downloadManager;
 	private int tcpPort;
+	private File fileToUpload;
 	
 	
 	public ChatManager(String apelido, int privatePort, int multicastPort, int tcpPort) {
@@ -167,7 +172,13 @@ public class ChatManager {
 				filename = messageString;
 				formatedMessage = "DOWNFILE [" + apelide + "] " + filename;
 				break;
-			case 8: formatedMessage = "DOWNINFO [" + filename + ", " + filesize + ", " + privateAddress + ", " + tcpPort + "]";
+			case 8: 
+				try {
+					//System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip" + InetAddress.getLocalHost().getHostAddress() + " porta tcp: " + tcpPort);
+					formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + InetAddress.getLocalHost().getHostAddress() + ", " + tcpPort + "]";
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				}
 				break;
 			case 9: formatedMessage = "LEAVE [" + apelide + "]";
 				break;
@@ -237,14 +248,18 @@ public class ChatManager {
 		this.privateAddress = privateAddress;
 	}
 
-	public void uploadFile(String nameFile) {
-		File file = downloadManager.getFileByName(nameFile);
-		if(file != null) System.out.println("Subindo arquivo " + file.getName());
-		
+	public boolean hasFile(String fileName) {
+		if(downloadManager.hasFile(fileName)) {
+			this.filename = fileName;
+			this.fileToUpload = downloadManager.getFileByName(fileName);
+			this.tcpThread.start();
+			return true;
+		}
+		return false;
 	}
 
-	public boolean hasFile(String nameFile) {
-		return downloadManager.hasFile(nameFile);
+	public File getFileToUpload() {
+		return fileToUpload;
 	}
 
 	public void setMessageString(String string) {
@@ -252,7 +267,27 @@ public class ChatManager {
 	}
 
 	public void downloadFile(String nameFile, int fileSizeInt, String peerAddress, int peerPortInt) {
-		
+		 try {
+			Socket socket = new Socket(InetAddress.getByName(peerAddress), peerPortInt);
+			byte[] contents = new byte[fileSizeInt];
+			
+			FileOutputStream fos = new FileOutputStream("c:\\Users\\savio\\Desktop" + nameFile);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			InputStream is = socket.getInputStream();
+			
+			int bytesRead = 0; 
+	        while((bytesRead=is.read(contents))!=-1)
+            bos.write(contents, 0, bytesRead); 
+		        
+	        bos.flush(); 
+	        socket.close(); 
+		        
+	        System.out.println("File saved successfully!");
+	        
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 
 	}
 
 }

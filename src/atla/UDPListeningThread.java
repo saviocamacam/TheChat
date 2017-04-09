@@ -83,17 +83,14 @@ public class UDPListeningThread extends Thread {
 						System.out.println("Arquivo " + i + ": " + nameFilesArray[i]);
 					}
 				}
-				else if(message.matches("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))")) {
-					String apelide = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 1);
-					String nameFile = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 2);
+				else if(message.matches("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z0-9]+))")) {
+					String apelide = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z0-9]+))", message, 1);
+					String nameFile = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z0-9]+))", message, 2);
 					
 					this.chatManager.setPrivateAddress(request.getAddress());
 					this.chatManager.setPrivatePort(request.getPort());
 					
 					if(chatManager.hasFile(nameFile)) {
-						this.chatManager.getTcpThread().start();
-						this.chatManager.uploadFile(nameFile);
-						
 						this.chatManager.sendFormatedMessage(1, 8);
 						System.out.println("Enviando " + nameFile + " para " + apelide);
 						
@@ -106,12 +103,12 @@ public class UDPListeningThread extends Thread {
 						this.chatManager.sendFormatedMessage(1, 4);
 					}
 				}
-				else if(message.matches("DOWNINFO \\[((.+)[.]([a-z1-9]+)), ([1-9]+), (.*), ([1-9]+)\\]")) {
-					String nameFile = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 1);
-					String fileSize = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 2);
+				else if(message.matches("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]")) {
+					String nameFile = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 1);
+					String fileSize = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 4);
 					int fileSizeInt = Integer.valueOf(fileSize);
-					String peerAddress = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 3);
-					String peerPort = this.chatManager.extractLocaleInformation("DOWNFILE \\[(.+)\\] ((.+)[.]([a-z1-9]+))", message, 4);
+					String peerAddress = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 5);
+					String peerPort = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 6);
 					int peerPortInt = Integer.valueOf(peerPort);
 					
 					chatManager.downloadFile(nameFile, fileSizeInt, peerAddress, peerPortInt);

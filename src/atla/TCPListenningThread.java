@@ -26,7 +26,9 @@ public class TCPListenningThread extends Thread {
 			Socket serverSocket = listenSocket.accept();
 			System.out.println ("Client connected ... No longer locked...");
 			
-			File file = new File("c:\\data1.bin");
+			File file = chatManager.getFileToUpload();
+			FileInputStream fis = new FileInputStream(file);
+			BufferedInputStream bis = new BufferedInputStream(fis);
 			OutputStream os = serverSocket.getOutputStream();
 			
 			byte[] contents;
@@ -41,6 +43,7 @@ public class TCPListenningThread extends Thread {
 	                current = fileLength;
 	            } 
 	            contents = new byte[size]; 
+	            bis.read(contents, 0, size); 
 	            os.write(contents);
 	        }
 	        os.flush(); 
@@ -52,9 +55,5 @@ public class TCPListenningThread extends Thread {
         } catch (IOException e) {
 			e.printStackTrace();
 		}
-        
-       
-		
 	}
-
 }
