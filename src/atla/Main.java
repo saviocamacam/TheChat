@@ -9,9 +9,9 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		//System.out.println("Informe seu apelido: ");
-		//String apelide = scanner.nextLine();
-		String apelide = "savio";
+		System.out.println("Informe seu apelido: ");
+		String apelide = scanner.nextLine();
+		//String apelide = "savio";
 		System.out.println(apelide);
 		
 		ChatManager chatManager = new ChatManager(apelide, 5555, 5566);

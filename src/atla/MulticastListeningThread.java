@@ -44,10 +44,10 @@ public class MulticastListeningThread extends Thread {
 					String apelide = matcher.group(1);
 					Peer peer = new Peer(messageIn.getAddress(), apelide);
 					
-				//	if(!chatManager.getPeers().contains(peer) && !peer.getApelido().equals(chatManager.getApelido())) {
+					if(!chatManager.getPeers().contains(peer) && !peer.getApelido().equals(chatManager.getApelido())) {
 						System.out.println(apelide + " entrou!");
 						chatManager.getPeers().add(peer);
-					//}
+					}
 					chatManager.setPrivateAdress(peer.getIp());
 					chatManager.sendFormatedMessage(null, 1, 2);
 				}

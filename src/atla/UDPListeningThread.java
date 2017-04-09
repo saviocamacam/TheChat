@@ -36,10 +36,10 @@ public class UDPListeningThread extends Thread {
 					String apelide = matcher.group(1);
 					Peer peer = new Peer(request.getAddress(), apelide);
 					
-					//if(!chatManager.getPeers().contains(peer)) {
+					if(!chatManager.getPeers().contains(peer)) {
 						System.out.println(apelide + " entrou!");
 						chatManager.getPeers().add(peer);
-					//}
+					}
 				}
 				
 				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)")) {
