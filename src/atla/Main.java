@@ -39,23 +39,24 @@ public class Main {
 					break;
 					
 				case 2:
-					if(chatManager.getStatusMulticast())
+					if(chatManager.getStatusMulticast()) {
 						chatManager.sendFormatedMessage(null, 0, 3);
-					else System.out.println("Você não está no chat");
+					}
+					else System.out.println("Voce não esta no chat");
 					break;
 					
 				case 3:
 					if(chatManager.getPeers().size() == 0) {
-						System.out.println("Lista de endereços está vazia");
+						System.out.println("Lista de enderecos esta vazia");
 					}
 					else{
 						chatManager.printNameOfPeers();
 						int option = scanner.nextInt();
-						chatManager.requestMessage(0);
+						chatManager.requestMessage();
 						if(option >= 0 && option < chatManager.getPeers().size())
 							chatManager.sendMessageFor(option);
 						else
-							System.out.println("Erro de índice");
+							System.out.println("Erro de indice");
 					}
 					break;
 					

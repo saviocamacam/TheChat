@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,14 +22,13 @@ public class ChatManager {
 	private int privatePort;
 	private int multicastPort;
 	private Scanner scanner = null;
-	private InetAddress destinationIp = null;
+	private InetAddress privateAddress = null;
 	private String messageString = null;
 	private byte[] messageBytes = null;
 	private boolean statusChat;
 	private DatagramPacket request = null;
 	
 	private InetAddress multicastAddress;
-	private InetAddress privateAddress;
 	
 	private String apelideDestination = null;
 	
@@ -101,14 +99,6 @@ public class ChatManager {
 		}
 	}
 
-	private void destinationVerify() {
-		for(Peer peer : peers) {
-			if(!peer.getIp().equals(destinationIp)) {
-				peers.add(new Peer(destinationIp, ""));
-			}
-		}
-	}
-
 	public boolean getStatusMulticast() {
 		return statusChat;
 	}
@@ -160,7 +150,7 @@ public class ChatManager {
 				break;
 			case 7: formatedMessage = "DOWNFILE [" + apelide + "]" + filename;
 				break;
-			case 8: formatedMessage = "DOWNINFO [" + filename + ", " + filesize + ", " + destinationIp + ", " + privatePort + "]";
+			case 8: formatedMessage = "DOWNINFO [" + filename + ", " + filesize + ", " + privateAddress + ", " + privatePort + "]";
 				break;
 			case 9: formatedMessage = "LEAVE [" + apelide + "]";
 				break;
@@ -188,47 +178,15 @@ public class ChatManager {
 		}
 	}
 	
-	public void requestMessage(int option) {
-		if(option == 1) {
-			System.out.println("IP Destino: ");
-			String destinationIpString = scanner.nextLine();
-			try {
-				destinationIp = InetAddress.getByName(destinationIpString);
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-			//destinationVerify();
-		}
-		
+	public void requestMessage() {
 		System.out.println("MSG: ");
 		messageString = scanner.nextLine();
 	}
 	
 	public void sendMessageFor(int option) {
 		Peer privatePeer = peers.get(option);
-		this.destinationIp = privatePeer.getIp();
-		sendPrivateMessage(privatePeer.getApelido());
-	}
-	
-	public void sendPrivateMessage(String destinationApelide) {
-		DatagramSocket socketPrivate = null;
-		
-		try {
-			socketPrivate = new DatagramSocket();
-			String formatedMessage = "MSGIDV FROM[" + apelide + "] TO [" + destinationApelide + "] " + messageString;
-			messageBytes = formatedMessage.getBytes();
-			request = new DatagramPacket(messageBytes, messageBytes.length, destinationIp, privatePort);
-			socketPrivate.send(request);
-			socketPrivate.close();
-			
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		this.privateAddress = privatePeer.getIp();
+		sendFormatedMessage(null, 1, 4);
 	}
 
 	public void sendGroupMessage() {

@@ -52,6 +52,17 @@ public class UDPListeningThread extends Thread {
 					
 					System.out.println(apelide + " diz: " + message2);
 				}
+				
+				else if(message.matches("MSGIDV \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)")) {
+					Pattern pattern = Pattern.compile("MSGIDV \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)");
+					Matcher matcher = pattern.matcher(message);
+					matcher.find();
+					
+					String apelide = matcher.group(2);
+					String message2 = matcher.group(3);
+					
+					System.out.println(apelide + " diz: " + message2);
+				}
 				else{
 					System.out.println("-- Mensagem recebida em formato inapropriado. Erro de protocolo");
 					String replyString = "Mensagem ao processada. Erro de protocolo.";
