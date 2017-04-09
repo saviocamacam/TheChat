@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatManager {
 	private DatagramSocket udpSocket = null;
@@ -244,6 +246,13 @@ public class ChatManager {
 
 	public void setPrivateAdress(InetAddress address) {
 		this.privateAddress = address;
+	}
+	
+	public String extractLocaleInformation(String regex, String message, int group) {
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(message);
+		matcher.find();
+		return matcher.group(group);
 	}
 
 }

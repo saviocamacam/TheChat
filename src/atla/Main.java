@@ -24,7 +24,7 @@ public class Main {
 			System.out.println("(2) Mensagem em grupo");
 			System.out.println("(3) Mensagem individual");
 			System.out.println("(4) Listar arquivos");
-			System.out.println("(5) Baixar arquivo\n");
+			System.out.println("(5) Baixar arquivo");
 			System.out.println("(6) Sair do grupo de conversacao\n");
 			
 			option = scanner.nextInt();
@@ -36,11 +36,13 @@ public class Main {
 					
 					chatManager.setStatusChat(true);
 					chatManager.sendFormatedMessage(null, 0, 1);
+					break;
 					
 				case 2:
 					if(chatManager.getStatusMulticast())
 						chatManager.sendFormatedMessage(null, 0, 3);
 					else System.out.println("Você não está no chat");
+					break;
 					
 				case 3:
 					if(chatManager.getPeers().size() == 0) {
@@ -55,16 +57,20 @@ public class Main {
 						else
 							System.out.println("Erro de índice");
 					}
+					break;
 					
 				case 4:
 					chatManager.sendFormatedMessage(null, 1, 5);
+					break;
 					
 				case 5:
 					chatManager.sendFormatedMessage(null, 1, 7);
+					break;
 					
 				case 6:
 					chatManager.setStatusChat(false);
 					chatManager.sendFormatedMessage("", 0, 9);
+					break;
 					
 				default:
 					break;

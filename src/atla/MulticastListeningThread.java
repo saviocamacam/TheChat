@@ -44,10 +44,10 @@ public class MulticastListeningThread extends Thread {
 					String apelide = matcher.group(1);
 					Peer peer = new Peer(messageIn.getAddress(), apelide);
 					
-					if(!chatManager.getPeers().contains(peer) && !peer.getApelido().equals(chatManager.getApelido())) {
+				//	if(!chatManager.getPeers().contains(peer) && !peer.getApelido().equals(chatManager.getApelido())) {
 						System.out.println(apelide + " entrou!");
 						chatManager.getPeers().add(peer);
-					}
+					//}
 					chatManager.setPrivateAdress(peer.getIp());
 					chatManager.sendFormatedMessage(null, 1, 2);
 				}
@@ -63,18 +63,20 @@ public class MulticastListeningThread extends Thread {
 					chatManager.getPeers().remove(peer);
 				}
 				
-				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] (.)*|([\n\t])*")) {
-					Pattern pattern = Pattern.compile("([a-z1-9]*)");
+				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)")) {
+					Pattern pattern = Pattern.compile("MSG \\[([a-zA-Z1-9]+)\\] ((.)*([\n\t])*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
 					String apelide = matcher.group(1);
-					System.out.println(apelide + " diz: " + message);
+					String message2 = matcher.group(2);
+					
+					System.out.println(apelide + " diz: " + message2);
 				}
 				
 				else {
 					System.out.println("Mensagem recebida em formato inapropriado. Erro de protocolo");
-					String replyString = "Mensagem nao processada. Erro de protocolo.";
+					String replyString ="MSG [" + chatManager.getApelido() + "] Mensagem nao processada. Erro de protocolo.";
 					byte[] replyBytes = replyString.getBytes();
 					DatagramPacket reply = new DatagramPacket(replyBytes, replyBytes.length, messageIn.getAddress(), messageIn.getPort());
 					this.multicastSocket.send(reply);
