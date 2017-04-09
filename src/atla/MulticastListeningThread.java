@@ -48,11 +48,11 @@ public class MulticastListeningThread extends Thread {
 						System.out.println(apelide + " entrou!");
 						chatManager.getPeers().add(peer);
 					}
-					chatManager.setPrivateAdress(peer.getIp());
+					chatManager.setPrivateAddress(peer.getIp());
 					chatManager.sendFormatedMessage(1, 2);
 				}
 				
-				else if(message.matches("LEAVE \\[([a-zA-Z1-9]+)\\]")) {
+				else if(message.matches("LEAVE \\[(.+)\\]")) {
 					Pattern pattern = Pattern.compile("LEAVE \\[([a-zA-Z1-9]+)\\]");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
@@ -63,8 +63,8 @@ public class MulticastListeningThread extends Thread {
 					chatManager.getPeers().remove(peer);
 				}
 				
-				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] (.*)")) {
-					Pattern pattern = Pattern.compile("MSG \\[([a-zA-Z1-9]+)\\] (.*)");
+				else if(message.matches("MSG \\[(.+)\\] (.*)")) {
+					Pattern pattern = Pattern.compile("MSG \\[(.+)\\] (.*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -75,7 +75,8 @@ public class MulticastListeningThread extends Thread {
 				}
 				
 				else {
-					System.out.println("Mensagem recebida em formato inapropriado. Erro de protocolo");
+					System.out.println(message);
+					System.out.println("MULTI: Mensagem recebida em formato inapropriado. Erro de protocolo");
 					String replyString ="MSG [" + chatManager.getApelido() + "] Mensagem nao processada. Erro de protocolo.";
 					byte[] replyBytes = replyString.getBytes();
 					DatagramPacket reply = new DatagramPacket(replyBytes, replyBytes.length, messageIn.getAddress(), messageIn.getPort());

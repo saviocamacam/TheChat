@@ -64,7 +64,20 @@ public class Main {
 					break;
 					
 				case 4:
-					chatManager.sendFormatedMessage(1, 5);
+					if(chatManager.getPeers().size() == 0) {
+						System.out.println("Lista de enderecos esta vazia");
+					}
+					else{
+						chatManager.printNameOfPeers();
+						int option = scanner.nextInt();
+						
+						if(option >= 0 && option < chatManager.getPeers().size()) {
+							chatManager.loadPeerOption(option);
+							chatManager.sendFormatedMessage(1, 5);
+						}
+						else
+							System.out.println("Erro de indice");
+					}
 					break;
 					
 				case 5:

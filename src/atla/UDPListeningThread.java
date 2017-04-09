@@ -28,8 +28,8 @@ public class UDPListeningThread extends Thread {
 				this.udpSocket.receive(request);
 				message = new String(request.getData(), request.getOffset(), request.getLength());
 				
-				if (message.matches("JOINACK \\[([a-zA-Z1-9]+)\\]")) {
-					Pattern pattern = Pattern.compile("JOINACK \\[([a-zA-Z1-9]+)\\]");
+				if (message.matches("JOINACK \\[(.+)\\]")) {
+					Pattern pattern = Pattern.compile("JOINACK \\[(.+)\\]");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -42,8 +42,8 @@ public class UDPListeningThread extends Thread {
 					}
 				}
 				
-				else if(message.matches("MSG \\[([a-zA-Z1-9]+)\\] (.*)")) {
-					Pattern pattern = Pattern.compile("MSG \\[([a-zA-Z1-9]+)\\] (.*)");
+				else if(message.matches("MSG \\[(.+)\\] (.*)")) {
+					Pattern pattern = Pattern.compile("MSG \\[(.+)\\] (.*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -53,8 +53,8 @@ public class UDPListeningThread extends Thread {
 					System.out.println(apelide + " diz: " + message2);
 				}
 				
-				else if(message.matches("MSGIDV FROM \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] (.*)")) {
-					Pattern pattern = Pattern.compile("MSGIDV FROM \\[([a-zA-Z1-9]+)\\] TO \\[([a-zA-Z1-9]+)\\] (.*)");
+				else if(message.matches("MSGIDV FROM \\[(.+)\\] TO \\[(.+)\\] (.*)")) {
+					Pattern pattern = Pattern.compile("MSGIDV FROM \\[(.+)\\] TO \\[(.+)\\] (.*)");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
@@ -63,9 +63,22 @@ public class UDPListeningThread extends Thread {
 					
 					System.out.println(apelide + " diz: " + message2);
 				}
+				else if(message.matches("LISTFILES \\[(.+)\\]")) {
+					Pattern pattern = Pattern.compile("LISTFILES \\[(.+)\\]");
+					Matcher matcher = pattern.matcher(message);
+					matcher.find();
+					
+					String apelide = matcher.group(1);
+					
+					System.out.println(apelide + " pediu para baixar. Respondendo...: ");
+					this.chatManager.setPrivateAddress(request.getAddress());
+					this.chatManager.setPrivatePort(request.getPort());
+					this.chatManager.sendFormatedMessage(1, 6);
+				}
 				else{
-					System.out.println("-- Mensagem recebida em formato inapropriado. Erro de protocolo");
-					String replyString = "Mensagem ao processada. Erro de protocolo.";
+					System.out.println(message);
+					System.out.println("PRIV: Mensagem recebida em formato inapropriado. Erro de protocolo");
+					String replyString ="MSG [" + chatManager.getApelido() + "] Mensagem nao processada. Erro de protocolo.";
 					byte[] replyBytes = replyString.getBytes();
 					DatagramPacket reply = new DatagramPacket(replyBytes, replyBytes.length, request.getAddress(), request.getPort());
 					this.udpSocket.send(reply);

@@ -35,6 +35,7 @@ public class ChatManager {
 	private String filename = null;
 	private String filesize;
 	private List<String> listOfNameFiles;
+	private DownloadManager downloadManager;
 	
 	
 	public ChatManager(String apelido, int privatePort, int multicastPort) {
@@ -42,6 +43,7 @@ public class ChatManager {
 		this.apelide = apelido;
 		this.privatePort = privatePort;
 		this.multicastPort = multicastPort;
+		this.downloadManager = new DownloadManager();
 		this.scanner = new Scanner(System.in);
 		
 		try {
@@ -143,7 +145,7 @@ public class ChatManager {
 				formatedMessage = "FILES [";
 				int i;
 				for(i = 0; i < listOfNameFiles.size()-1 ; i++) {
-					formatedMessage.concat(listOfNameFiles.get(i) + ", ");
+					formatedMessage.concat(downloadManager.getListOfNameFilesUpload().get(i) + ", ");
 				}
 				formatedMessage.concat(listOfNameFiles.get(i));
 				formatedMessage.concat("]");
@@ -157,22 +159,20 @@ public class ChatManager {
 			default: formatedMessage = "Vish, deu merda aqui. Foi mal, aqui e o " + apelide;
 		}
 		
-		int port = multicastPort;
-		InetAddress localAddress = multicastAddress;
-		
 		messageBytes = formatedMessage.getBytes();
-		
-		switch(destinationMode) {
-			case 1: 
-				port = privatePort;
-				localAddress = privateAddress;
-				break;
-			default: port = multicastPort;
-		}
-		
-		request = new DatagramPacket(messageBytes, messageBytes.length, localAddress, port);
 		try {
-			multicastSocket.send(request);
+			switch(destinationMode) {
+				case 1: 
+					request = new DatagramPacket(messageBytes, messageBytes.length, privateAddress, privatePort);
+					udpSocket.send(request);
+					break;
+				default:
+					request = new DatagramPacket(messageBytes, messageBytes.length, multicastAddress, multicastPort);
+					multicastSocket.send(request);
+			}
+		
+			
+	
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -201,16 +201,27 @@ public class ChatManager {
 			e.printStackTrace();
 		}
 	}
-
-	public void setPrivateAdress(InetAddress address) {
-		this.privateAddress = address;
-	}
 	
 	public String extractLocaleInformation(String regex, String message, int group) {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(message);
 		matcher.find();
 		return matcher.group(group);
+	}
+
+	public void loadPeerOption(int option) {
+		Peer privatePeer = peers.get(option);
+		this.privateAddress = privatePeer.getIp();
+		this.apelideDestination = privatePeer.getApelido();
+		//this.downloadManager.loadFilesUpload();
+	}
+
+	public void setPrivatePort(int privatePort) {
+		this.privatePort = privatePort;
+	}
+
+	public void setPrivateAddress(InetAddress privateAddress) {
+		this.privateAddress = privateAddress;
 	}
 
 }
