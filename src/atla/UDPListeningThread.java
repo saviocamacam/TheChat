@@ -111,7 +111,8 @@ public class UDPListeningThread extends Thread {
 					String peerPort = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 6);
 					int peerPortInt = Integer.valueOf(peerPort);
 					
-					chatManager.downloadFile(nameFile, fileSizeInt, request.getAddress().getHostAddress(), peerPortInt);
+					//request.getAddress().getHostAddress()
+					chatManager.downloadFile(nameFile, fileSizeInt, peerAddress, peerPortInt);
 				}
 				else{
 					System.out.println(message);

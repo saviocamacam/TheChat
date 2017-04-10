@@ -63,7 +63,7 @@ public class ChatManager {
 			udpSocket = new DatagramSocket(privatePort);
 			multicastSocket = new MulticastSocket(multicastPort);
 			multicastSocket.setLoopbackMode(false);
-			this.myIp = multicastSocket.getInterface().getCanonicalHostName();
+			//this.myIp = multicastSocket.getInterface().getCanonicalHostName();
 			serverSocket = new ServerSocket(tcpPort);
 			
 		} catch (SocketException e) {
@@ -300,8 +300,7 @@ public class ChatManager {
 	}
 	
 	public void getMyIpAddress() {
-		String ip;
-	    try {
+		try {
 	        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 	        while (interfaces.hasMoreElements()) {
 	            NetworkInterface iface = interfaces.nextElement();
@@ -312,9 +311,11 @@ public class ChatManager {
 	            Enumeration<InetAddress> addresses = iface.getInetAddresses();
 	            while(addresses.hasMoreElements()) {
 	                InetAddress addr = addresses.nextElement();
-	                ip = addr.getHostAddress();
-	                if(!addr.isLoopbackAddress() && addr instanceof Inet4Address)
-	                	System.out.println("IP: " + ip);
+	                
+	                if(!addr.isLoopbackAddress() && addr instanceof Inet4Address) {
+	                	myIp = addr.getHostAddress();
+	                	System.out.println("IP: " + myIp);
+	                }
 	            }
 	        }
 	    } catch (SocketException e) {
