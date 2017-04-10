@@ -268,6 +268,8 @@ public class ChatManager {
 
 	public void downloadFile(String nameFile, int fileSizeInt, String peerAddress, int peerPortInt) {
 		 try {
+			System.out.println("Address da fonte: " + InetAddress.getByName(peerAddress));
+			System.out.println("Port da fonte: " + peerPortInt);
 			Socket socket = new Socket(InetAddress.getByName(peerAddress), peerPortInt);
 			byte[] contents = new byte[fileSizeInt];
 			
