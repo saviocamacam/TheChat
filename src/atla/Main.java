@@ -14,7 +14,7 @@ public class Main {
 		//String apelide = "savio";
 		System.out.println(apelide);
 		
-		ChatManager chatManager = new ChatManager(apelide, 5555, 5566, 7777);
+		ChatManager chatManager = new ChatManager(apelide, 6799, 6789, 7777);
 		chatManager.initialize();
 		
 		do {
