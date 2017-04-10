@@ -103,12 +103,12 @@ public class UDPListeningThread extends Thread {
 						this.chatManager.sendFormatedMessage(1, 4);
 					}
 				}
-				else if(message.matches("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]")) {
-					String nameFile = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 1);
-					String fileSize = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 4);
+				else if(message.matches("DOWNINFO \\[((.+)[.]?([a-z0-9]+))?, ([0-9]+), (.*), ([0-9]+)\\]")) {
+					String nameFile = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]?([a-z0-9]+))?, ([0-9]+), (.*), ([0-9]+)\\]", message, 1);
+					String fileSize = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]?([a-z0-9]+))?, ([0-9]+), (.*), ([0-9]+)\\]", message, 4);
 					int fileSizeInt = Integer.valueOf(fileSize);
-					String peerAddress = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 5);
-					String peerPort = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]([a-z0-9]+)), ([0-9]+), (.*), ([0-9]+)\\]", message, 6);
+					String peerAddress = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]?([a-z0-9]+))?, ([0-9]+), (.*), ([0-9]+)\\]", message, 5);
+					String peerPort = this.chatManager.extractLocaleInformation("DOWNINFO \\[((.+)[.]?([a-z0-9]+))?, ([0-9]+), (.*), ([0-9]+)\\]", message, 6);
 					int peerPortInt = Integer.valueOf(peerPort);
 					
 					//request.getAddress().getHostAddress()

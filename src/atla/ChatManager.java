@@ -212,6 +212,7 @@ public class ChatManager {
 	public void sendMessageFor(int option) {
 		Peer privatePeer = peers.get(option);
 		this.privateAddress = privatePeer.getIp();
+		this.apelideDestination = privatePeer.getApelido();
 		sendFormatedMessage(1, 4);
 	}
 

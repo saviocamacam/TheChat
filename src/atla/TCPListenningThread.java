@@ -48,7 +48,7 @@ public class TCPListenningThread extends Thread {
 	        }
 	        os.flush(); 
 	        serverSocket.close();
-	        listenSocket.close();
+	        //listenSocket.close();
 	        System.out.println("File sent succesfully!");
 			
 		
