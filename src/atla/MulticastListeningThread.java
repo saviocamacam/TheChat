@@ -36,8 +36,8 @@ public class MulticastListeningThread extends Thread {
 				String message = new String(messageIn.getData(), messageIn.getOffset(), messageIn.getLength());
 				
 				
-				if (message.matches("JOIN \\[[a-zA-Z0-9]+\\]")) {
-					Pattern pattern = Pattern.compile("JOIN \\[([a-zA-Z0-9]+)\\]");
+				if (message.matches("JOIN \\[.+\\]")) {
+					Pattern pattern = Pattern.compile("JOIN \\[(.+)\\]");
 					Matcher matcher = pattern.matcher(message);
 					matcher.find();
 					
