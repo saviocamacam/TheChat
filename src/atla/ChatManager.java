@@ -95,9 +95,6 @@ public class ChatManager {
 		
 		multicastThread = new MulticastListeningThread(multicastSocket, this, multicastAddress);
 		multicastThread.start();
-		
-		tcpThread = new TCPListenningThread(serverSocket, this);
-		
 	}
 
 	public TCPListenningThread getTcpThread() {
@@ -257,6 +254,7 @@ public class ChatManager {
 		if(downloadManager.hasFile(fileName)) {
 			this.filename = fileName;
 			this.fileToUpload = downloadManager.getFileByName(fileName);
+			tcpThread = new TCPListenningThread(serverSocket, this);
 			this.tcpThread.start();
 			return true;
 		}
@@ -287,9 +285,9 @@ public class ChatManager {
             bos.write(contents, 0, bytesRead); 
 		        
 	        bos.flush(); 
-	        socket.close();
 	        is.close();
 	        fos.close();
+	        socket.close();
 		        
 	        System.out.println("File saved successfully!");
 	        
