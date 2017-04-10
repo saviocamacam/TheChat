@@ -44,6 +44,7 @@ public class ChatManager {
 	private DownloadManager downloadManager;
 	private int tcpPort;
 	private File fileToUpload;
+	private InetAddress myIp;
 	
 	
 	public ChatManager(String apelido, int privatePort, int multicastPort, int tcpPort) {
@@ -59,6 +60,8 @@ public class ChatManager {
 			this.multicastAddress = InetAddress.getByName("225.1.2.3");
 			udpSocket = new DatagramSocket(privatePort);
 			multicastSocket = new MulticastSocket(multicastPort);
+			multicastSocket.setLoopbackMode(true);
+			this.myIp = multicastSocket.getInterface();
 			serverSocket = new ServerSocket(tcpPort);
 			
 		} catch (SocketException e) {
@@ -175,20 +178,8 @@ public class ChatManager {
 				formatedMessage = "DOWNFILE [" + apelide + "] " + filename;
 				break;
 			case 8: 
-				try {
-					InetAddress inet = InetAddress.getLocalHost();
-					InetAddress[] ips = InetAddress.getAllByName(inet.getCanonicalHostName());
-					int i1;
-					if (ips  != null ) {
-						for (i1 = 0; i1 < ips.length; i1++) {
-							System.out.println(ips[i1]);
-						}
-					}
-					System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip " + InetAddress.getLocalHost().getHostAddress() + " porta tcp: " + tcpPort);
-					formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + InetAddress.getLocalHost().getHostAddress() + ", " + tcpPort + "]";
-				} catch (UnknownHostException e1) {
-					e1.printStackTrace();
-				}
+				System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip " + myIp.getHostAddress() + " porta tcp: " + tcpPort);
+				formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + myIp.getHostAddress() + ", " + tcpPort + "]";
 				break;
 			case 9: formatedMessage = "LEAVE [" + apelide + "]";
 				break;
