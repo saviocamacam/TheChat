@@ -176,6 +176,14 @@ public class ChatManager {
 				break;
 			case 8: 
 				try {
+					InetAddress inet = InetAddress.getLocalHost();
+					InetAddress[] ips = InetAddress.getAllByName(inet.getCanonicalHostName());
+					int i1;
+					if (ips  != null ) {
+						for (i1 = 0; i1 < ips.length; i1++) {
+							System.out.println(ips[i1]);
+						}
+					}
 					System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip " + InetAddress.getLocalHost().getHostAddress() + " porta tcp: " + tcpPort);
 					formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + InetAddress.getLocalHost().getHostAddress() + ", " + tcpPort + "]";
 				} catch (UnknownHostException e1) {
