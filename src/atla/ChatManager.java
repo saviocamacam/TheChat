@@ -156,7 +156,9 @@ public class ChatManager {
 				break;
 			case 4: formatedMessage = "MSGIDV FROM [" + apelide + "] TO [" + apelideDestination + "] " + messageString;
 				break;	
-			case 5: formatedMessage = "LISTFILES [" + apelide + "]";
+			case 5:
+				downloadManager.loadFilesUpload();
+				formatedMessage = "LISTFILES [" + apelide + "]";
 				break;
 			case 6: 
 				formatedMessage = "FILES [";
@@ -236,6 +238,7 @@ public class ChatManager {
 
 	public void loadPeerOption(int option) {
 		Peer privatePeer = peers.get(option);
+		System.out.println("Peer selecionado: " + privatePeer.getApelido() + " port: " + privatePeer.getIp());
 		this.privateAddress = privatePeer.getIp();
 		this.apelideDestination = privatePeer.getApelido();
 	}

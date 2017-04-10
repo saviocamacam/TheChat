@@ -33,6 +33,7 @@ public class DownloadManager {
 	}
 
 	public void loadFilesUpload() {
+		listOfFilesUpload = folderUpload.listFiles();
 		for(File file : listOfFilesUpload) {
 			if (file.isFile()) {
 				//System.out.println(file.getName());
