@@ -12,7 +12,6 @@ import java.net.MulticastSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -61,7 +60,6 @@ public class ChatManager {
 			udpSocket = new DatagramSocket(privatePort);
 			multicastSocket = new MulticastSocket(multicastPort);
 			multicastSocket.setLoopbackMode(true);
-			this.myIp = multicastSocket.getInterface();
 			serverSocket = new ServerSocket(tcpPort);
 			
 		} catch (SocketException e) {
@@ -191,6 +189,8 @@ public class ChatManager {
 			switch(destinationMode) {
 				case 1: 
 					request = new DatagramPacket(messageBytes, messageBytes.length, privateAddress, privatePort);
+					myIp = request.getAddress();
+					System.out.println("Meu IP: " + myIp.getHostName());
 					udpSocket.send(request);
 					break;
 				default:

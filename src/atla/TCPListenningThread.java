@@ -37,7 +37,7 @@ public class TCPListenningThread extends Thread {
 			while(current!=fileLength){ 
 	            int size = 10000;
 	            if(fileLength - current >= size)
-	                current += size;    
+	                current += size;
 	            else{ 
 	                size = (int)(fileLength - current); 
 	                current = fileLength;
