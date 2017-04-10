@@ -174,7 +174,7 @@ public class ChatManager {
 				break;
 			case 8: 
 				try {
-					//System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip" + InetAddress.getLocalHost().getHostAddress() + " porta tcp: " + tcpPort);
+					System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip " + InetAddress.getLocalHost().getHostAddress() + " porta tcp: " + tcpPort);
 					formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + InetAddress.getLocalHost().getHostAddress() + ", " + tcpPort + "]";
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
@@ -268,7 +268,7 @@ public class ChatManager {
 
 	public void downloadFile(String nameFile, int fileSizeInt, String peerAddress, int peerPortInt) {
 		 try {
-			System.out.println("Address da fonte: " + InetAddress.getByName(peerAddress));
+			System.out.println("Address da fonte: " + peerAddress);
 			System.out.println("Port da fonte: " + peerPortInt);
 			Socket socket = new Socket(InetAddress.getByName(peerAddress), peerPortInt);
 			byte[] contents = new byte[fileSizeInt];
