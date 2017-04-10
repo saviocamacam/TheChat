@@ -43,7 +43,7 @@ public class ChatManager {
 	private DownloadManager downloadManager;
 	private int tcpPort;
 	private File fileToUpload;
-	private InetAddress myIp;
+	private String myIp;
 	
 	
 	public ChatManager(String apelido, int privatePort, int multicastPort, int tcpPort) {
@@ -60,6 +60,7 @@ public class ChatManager {
 			udpSocket = new DatagramSocket(privatePort);
 			multicastSocket = new MulticastSocket(multicastPort);
 			multicastSocket.setLoopbackMode(true);
+			this.myIp = multicastSocket.getInterface().getCanonicalHostName();
 			serverSocket = new ServerSocket(tcpPort);
 			
 		} catch (SocketException e) {
@@ -176,8 +177,8 @@ public class ChatManager {
 				formatedMessage = "DOWNFILE [" + apelide + "] " + filename;
 				break;
 			case 8: 
-				System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip " + myIp.getHostAddress() + " porta tcp: " + tcpPort);
-				formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + myIp.getHostAddress() + ", " + tcpPort + "]";
+				System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip " + myIp + " porta tcp: " + tcpPort);
+				formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + myIp + ", " + tcpPort + "]";
 				break;
 			case 9: formatedMessage = "LEAVE [" + apelide + "]";
 				break;
@@ -189,8 +190,6 @@ public class ChatManager {
 			switch(destinationMode) {
 				case 1: 
 					request = new DatagramPacket(messageBytes, messageBytes.length, privateAddress, privatePort);
-					myIp = request.getAddress();
-					System.out.println("Meu IP: " + myIp.getHostName());
 					udpSocket.send(request);
 					break;
 				default:
