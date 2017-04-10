@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -59,7 +62,7 @@ public class ChatManager {
 			this.multicastAddress = InetAddress.getByName("225.1.2.3");
 			udpSocket = new DatagramSocket(privatePort);
 			multicastSocket = new MulticastSocket(multicastPort);
-			multicastSocket.setLoopbackMode(true);
+			multicastSocket.setLoopbackMode(false);
 			this.myIp = multicastSocket.getInterface().getCanonicalHostName();
 			serverSocket = new ServerSocket(tcpPort);
 			
@@ -177,6 +180,7 @@ public class ChatManager {
 				formatedMessage = "DOWNFILE [" + apelide + "] " + filename;
 				break;
 			case 8: 
+				getMyIpAddress();
 				System.out.println("Envio do arquivo: " + filename+ " tam: " + fileToUpload.length() + " Meu ip " + myIp + " porta tcp: " + tcpPort);
 				formatedMessage = "DOWNINFO [" + filename + ", " + fileToUpload.length() + ", " + myIp + ", " + tcpPort + "]";
 				break;
@@ -293,6 +297,29 @@ public class ChatManager {
 			e.printStackTrace();
 		}
 		 
+	}
+	
+	public void getMyIpAddress() {
+		String ip;
+	    try {
+	        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+	        while (interfaces.hasMoreElements()) {
+	            NetworkInterface iface = interfaces.nextElement();
+	            // filters out 127.0.0.1 and inactive interfaces
+	            if (iface.isLoopback() || !iface.isUp())
+	                continue;
+
+	            Enumeration<InetAddress> addresses = iface.getInetAddresses();
+	            while(addresses.hasMoreElements()) {
+	                InetAddress addr = addresses.nextElement();
+	                ip = addr.getHostAddress();
+	                if(!addr.isLoopbackAddress() && addr instanceof Inet4Address)
+	                	System.out.println("IP: " + ip);
+	            }
+	        }
+	    } catch (SocketException e) {
+	        throw new RuntimeException(e);
+	    }
 	}
 
 }
