@@ -44,7 +44,7 @@ public class Main {
 						chatManager.requestMessage();
 						chatManager.sendFormatedMessage(0, 3);
 					}
-					else System.out.println("Voce não esta no chat");
+					else System.out.println("Voce nÃ£o esta no chat");
 					break;
 					
 				case 3:
