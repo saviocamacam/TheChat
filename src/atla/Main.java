@@ -39,7 +39,7 @@ public class Main {
 					break;
 					
 				case 2:
-					if(chatManager.getStatusMulticast()) {
+					if(chatManager.getStatusChat()) {
 						System.out.println("Mensagem em grupo:");
 						chatManager.requestMessage();
 						chatManager.sendFormatedMessage(0, 3);

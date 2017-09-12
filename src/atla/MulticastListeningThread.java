@@ -12,8 +12,8 @@ public class MulticastListeningThread extends Thread {
 	
 	private MulticastSocket multicastSocket = null;
 	private InetAddress group = null;
-	private byte[] messageByte = null;
 	private ChatManager chatManager;
+	private byte[] messageByte;
 	
 	public MulticastListeningThread(MulticastSocket multicastSocket, ChatManager chatManager, InetAddress group) {
 		this.multicastSocket = multicastSocket;
@@ -29,7 +29,7 @@ public class MulticastListeningThread extends Thread {
 			
 			chatManager.setStatusChat(true);
 			
-			while(chatManager.getStatusMulticast()) {
+			while(chatManager.getStatusChat()) {
 				messageIn = new DatagramPacket(messageByte, messageByte.length);
 				multicastSocket.receive(messageIn);
 				
@@ -44,7 +44,7 @@ public class MulticastListeningThread extends Thread {
 					String apelide = matcher.group(1);
 					Peer peer = new Peer(messageIn.getAddress(), apelide);
 					
-					if(!chatManager.getPeers().contains(peer) && !peer.getApelido().equals(chatManager.getApelido())) {
+					if(!chatManager.getPeers().contains(peer) && !peer.getNickname().equals(chatManager.getApelido())) {
 						System.out.println(apelide + " entrou!");
 						chatManager.getPeers().add(peer);
 					}

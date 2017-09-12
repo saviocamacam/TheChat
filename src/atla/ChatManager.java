@@ -116,11 +116,11 @@ public class ChatManager {
 	public void printNameOfPeers() {
 		int i = 0;
 		for(Peer peer : peers) {
-			System.out.println("(" + i++ + ")" + peer.getApelido() + ":" + peer.getIp());
+			System.out.println("(" + i++ + ")" + peer.getNickname() + ":" + peer.getIp());
 		}
 	}
 
-	public boolean getStatusMulticast() {
+	public boolean getStatusChat() {
 		return statusChat;
 	}
 
@@ -212,7 +212,7 @@ public class ChatManager {
 	public void sendMessageFor(int option) {
 		Peer privatePeer = peers.get(option);
 		this.privateAddress = privatePeer.getIp();
-		this.apelideDestination = privatePeer.getApelido();
+		this.apelideDestination = privatePeer.getNickname();
 		sendFormatedMessage(1, 4);
 	}
 
@@ -238,9 +238,9 @@ public class ChatManager {
 
 	public void loadPeerOption(int option) {
 		Peer privatePeer = peers.get(option);
-		System.out.println("Peer selecionado: " + privatePeer.getApelido() + " port: " + privatePeer.getIp());
+		System.out.println("Peer selecionado: " + privatePeer.getNickname() + " port: " + privatePeer.getIp());
 		this.privateAddress = privatePeer.getIp();
-		this.apelideDestination = privatePeer.getApelido();
+		this.apelideDestination = privatePeer.getNickname();
 	}
 
 	public void setPrivatePort(int privatePort) {

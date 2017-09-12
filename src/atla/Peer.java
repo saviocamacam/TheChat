@@ -12,7 +12,7 @@ public class Peer {
 		this.setIp(inetAddress);
 	}
 
-	public String getApelido() {
+	public String getNickname() {
 		return apelide;
 	}
 
@@ -30,7 +30,7 @@ public class Peer {
 	
 	@Override
 	public boolean equals(Object o) {
-		return this.apelide.equals(((Peer) o).getApelido());
+		return this.apelide.equals(((Peer) o).getNickname());
 	}
 
 }
